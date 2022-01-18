@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py4castr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: py4castr
+  template:
+    metadata:
+      labels:
+        app: py4castr
+    spec:
+      containers:
+        - name: py4castr
+          image: avouacr/py4castr:latest
+          ports:
+          - containerPort: 3838

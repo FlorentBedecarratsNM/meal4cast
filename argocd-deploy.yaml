@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: py4castr
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/avouacr/py4castr.git
+    targetRevision: HEAD
+    path: deployment
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: user-avouacr
+  syncPolicy:
+    automated:
+      selfHeal: true
