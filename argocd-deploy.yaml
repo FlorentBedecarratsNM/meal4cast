@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: py4castr
+  name: meal4cast
 spec:
   project: default
   source:
-    repoURL: https://github.com/avouacr/py4castr.git
+    repoURL: https://github.com/FlorentBedecarratsNM/meal4cast
     targetRevision: HEAD
     path: deployment
   destination:
     server: https://kubernetes.default.svc
-    namespace: user-avouacr
+    namespace: user-fbedecarrats
   syncPolicy:
     automated:
       selfHeal: true

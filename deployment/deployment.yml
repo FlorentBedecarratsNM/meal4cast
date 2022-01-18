@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: py4castr
+  name: meal4cast
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: py4castr
+      app: meal4ast
   template:
     metadata:
       labels:
-        app: py4castr
+        app: meal4cast
     spec:
       containers:
-        - name: py4castr
-          image: avouacr/py4castr:latest
+        - name: meal4cast
+          image: fbedecarrats/meal4cast:latest
           ports:
           - containerPort: 3838

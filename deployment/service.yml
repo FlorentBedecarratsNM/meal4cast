@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: py4castr
+  name: meal4cast
 spec:
   ports:
     - name: http
       targetPort: 3838
       port: 80
   selector:
-    app: py4castr
+    app: meal4ast
