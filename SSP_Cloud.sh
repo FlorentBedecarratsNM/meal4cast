@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # Create variables
-WORK_DIR=/home/rstudio/py4castR
-REPO_URL=https://github.com/FlorentBedecarratsNM/meal4cast # As initial
+PROJ_NAME=meal4cast
+WORK_DIR=/home/rstudio/$PROJ_NAME
+REPO_URL=https://github.com/FlorentBedecarratsNM/$PROJ_NAME # As initial
 # DATA_DIR=${WORK_DIR}/data # for later
 
 # Git
@@ -23,7 +24,7 @@ chown -R rstudio:users $WORK_DIR
         if (newSession && identical(getwd(), path.expand('~')))
         {
             message('On charge directement le bon projet :-) ')
-            rstudioapi::openProject('~/py4castR')
+            rstudioapi::openProject('~/$PROJ_NAME')
             rstudioapi::applyTheme('Merbivore')
             }
             }, action = 'append')
