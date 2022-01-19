@@ -10,7 +10,8 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic 
     fluidPage(
-      h1("meal4cast")
+      h1("meal4cast"),
+      mod_admin_list_files_ui("admin_list_files_ui_1")
     )
   )
 }
