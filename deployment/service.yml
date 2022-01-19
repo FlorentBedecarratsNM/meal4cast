@@ -8,4 +8,4 @@ spec:
       targetPort: 3838
       port: 80
   selector:
-    app: meal4ast
+    app: meal4cast

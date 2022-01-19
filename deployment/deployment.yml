@@ -6,7 +6,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: meal4ast
+      app: meal4cast
   template:
     metadata:
       labels:
