@@ -16,4 +16,4 @@ spec:
         - name: meal4cast
           image: fbedecarrats/meal4cast:latest
           ports:
-          - containerPort: 3838
+          - containerPort: 80
