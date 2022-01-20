@@ -12,6 +12,15 @@ WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
 RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r pandas==1.1.0
+RUN pip install --no-cache-dir -r numpy==1.19.1
+RUN pip install --no-cache-dir -r xgboost==1.1.1
+RUN pip install --no-cache-dir -r scikit-learn==0.23.1
+RUN pip install --no-cache-dir -r dask[dataframe]==0.19.4
+RUN pip install --no-cache-dir -r lunardate==0.2.0
+RUN pip install --no-cache-dir -r convertdate==2.2.1
+RUN pip install --no-cache-dir -r matplotlib==3.2.1
+RUN pip install --no-cache-dir -r python-dateutil==2.8.1
+RUN pip install --no-cache-dir -r fbprophet==0.6
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
