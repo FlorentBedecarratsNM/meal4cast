@@ -11,6 +11,9 @@ ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
-RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git .
+RUN mkdir temp_git/
+RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git temp_git/
+RUN mv temp_git/{app/,tests/,main.py,requirements.txt} .
+RUN rm -rf temp_git/
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"

@@ -34,6 +34,12 @@ golem::add_shinyserver_file()
 ## Docker ----
 ## If you want to deploy via a generic Dockerfile
 golem::add_dockerfile()
+## The following lines need to be added to the dockerfile
+# RUN mkdir temp_git/
+# RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git temp_git/
+# RUN mv temp_git/{app/,tests/,main.py,requirements.txt} .
+# RUN rm -rf temp_git/
+
 
 ## If you want to deploy to ShinyProxy
 golem::add_dockerfile_shinyproxy()

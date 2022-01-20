@@ -4,3 +4,10 @@
 .httr-oauth
 .DS_Store
 todo.md
+
+# We clone the repo https://github.com/nantesmetropole/school_meal_forecast_xgboost
+# So we exclude its content from the git of this repo
+app/
+tests/
+main.py
+requirements.txt
