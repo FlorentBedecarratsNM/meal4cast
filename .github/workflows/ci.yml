@@ -26,5 +26,11 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: fbedecarrats/meal4cast:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/meal4cast:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/meal4cast:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/meal4cast:buildcache,mode=max
+          
