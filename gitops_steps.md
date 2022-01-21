@@ -19,6 +19,8 @@ We specify if the method is generic (valid for all application) or specific to a
 - un pipeline de CI (.github/workflows/ci.yml) qui rebuild l'image à chaque modif du code source directement sur le cluster SSPCloud (via kaniko) et l'envoie sur le registry docker associé à git.lab.sspcloud.fr
 
 
+Vérifier les ports 3838 pour une application shiny normale, 80 pour shinyproxy
+
 
 
 
