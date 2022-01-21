@@ -20,7 +20,7 @@ ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
-RUN https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.tar.gz .
+RUN https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.zip .
 # RUN tar -xzf dev.tar.gz \
 # && mv school_meal_forecast_xgboost-dev/{app/,tests/,main.py} . \
 # && rm -rf school_meal_forecast_xgboost-dev \
