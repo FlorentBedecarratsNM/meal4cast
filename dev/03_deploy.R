@@ -33,7 +33,7 @@ golem::add_shinyserver_file()
 
 ## Docker ----
 ## If you want to deploy via a generic Dockerfile
-golem::add_dockerfile()
+golem::add_dockerfile(extra_sysreqs = c("python3", "python3-pip"))
 ## The following lines need to be added to the dockerfile
 # python3 python3-pip ?
 
