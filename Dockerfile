@@ -1,6 +1,5 @@
 FROM rocker/r-ver:4.1.2
 RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev python3 python3-pip && rm -rf /var/lib/apt/lists/*
-RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git .
 RUN pip install pandas==1.1.0
 RUN pip install numpy==1.19.1
 RUN pip install xgboost==1.1.1
@@ -21,5 +20,6 @@ ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
+ADD https://github.com/FlorentBedecarratsNM/meal4cast/archive/refs/heads/master.zip .
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
