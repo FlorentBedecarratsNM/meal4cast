@@ -20,8 +20,8 @@ ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
-ADD https://github.com/FlorentBedecarratsNM/meal4cast/archive/refs/heads/master.tar.gz .
-RUN tar -xzf master.tar.gz \
- && rm master.tar.gz
+ADD https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.tar.gz .
+RUN tar -xzf dev.tar.gz \
+ && rm dev.tar.gz
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
