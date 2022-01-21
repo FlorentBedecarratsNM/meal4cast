@@ -23,7 +23,7 @@ RUN rm -rf /build_zone
 ADD https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.tar.gz .
 RUN tar -xzf dev.tar.gz \
  && mv school_meal_forecast_xgboost-dev/{app/,tests/,main.py} . \
- && rm -rf school_meal_forecast_xgboost-dev
+ && rm -rf school_meal_forecast_xgboost-dev \
  && rm dev.tar.gz
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
