@@ -21,5 +21,7 @@ WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
 ADD https://github.com/FlorentBedecarratsNM/meal4cast/archive/refs/heads/master.tar.gz .
+RUN tar -xzf master.tar.gz \
+ && rm master.tar.gz
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
