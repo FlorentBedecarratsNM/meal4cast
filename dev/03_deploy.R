@@ -33,13 +33,37 @@ golem::add_shinyserver_file()
 
 ## Docker ----
 ## If you want to deploy via a generic Dockerfile
-golem::add_dockerfile()
+golem::add_dockerfile(extra_sysreqs = c("python3", "python3-pip"))
 ## The following lines need to be added to the dockerfile
-# RUN mkdir temp_git/
-# RUN git clone -b dev https://github.com/nantesmetropole/school_meal_forecast_xgboost.git temp_git/
-# RUN mv temp_git/{app/,tests/,main.py,requirements.txt} .
-# RUN rm -rf temp_git/
+# python3 python3-pip ?
 
+insert_lines <- function(target_file = "Dockerfile", before = "EXPOSE", suffix = "", 
+                         to_add = "blabla") {
+  my_file <- readr::read_lines(target_file)
+  before_line <- which(stringr::str_starts(my_file, before))
+  out <- c(my_file[1:before_line-1], to_add, my_file[before_line:length(my_file)])
+  writeLines(out, paste0(target_file, suffix), )
+}
+
+insert_lines(before = "EXPOSE 80", 
+             to_add = c("ADD https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.zip ./",
+                        "RUN unzip dev.zip",
+                        "RUN mv school_meal_forecast_xgboost-dev/app/ .",
+                        "RUN mv school_meal_forecast_xgboost-dev/tests/ .",
+                        "RUN mv school_meal_forecast_xgboost-dev/main.py .",
+                        "RUN rm -rf school_meal_forecast_xgboost-dev",
+                        "RUN rm dev.zip"))
+
+insert_lines(before = "RUN echo", 
+             to_add = c("RUN pip install pandas==1.1.0",
+                        "RUN pip install numpy==1.19.1",
+                        "RUN pip install xgboost==1.1.1",
+                        "RUN pip install scikit-learn==0.23.1",
+                        "RUN pip install dask[dataframe]==0.19.4",
+                        "RUN pip install lunardate==0.2.0",
+                        "RUN pip install convertdate==2.2.1",
+                        "RUN pip install matplotlib==3.2.1",
+                        "RUN pip install python-dateutil==2.8.1"))
 
 ## If you want to deploy to ShinyProxy
 golem::add_dockerfile_shinyproxy()
