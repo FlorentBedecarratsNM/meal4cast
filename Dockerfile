@@ -1,8 +1,13 @@
 FROM rocker/r-ver:4.1.2
 RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev python3 python3-pip && rm -rf /var/lib/apt/lists/*
-RUN pip install virtualenv
-RUN virtualenv venv
-RUN /opt/venv/bin/activate
+# changes from here
+# RUN pip install virtualenv
+# RUN virtualenv venv
+# RUN /opt/venv/bin/activate
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# This works
 RUN pip install pandas==1.1.0
 RUN pip install numpy==1.19.1
 RUN pip install xgboost==1.1.1
