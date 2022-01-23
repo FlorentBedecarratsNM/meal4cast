@@ -45,7 +45,7 @@ insert_lines <- function(target_file = "Dockerfile", before = "EXPOSE", suffix =
   writeLines(out, paste0(target_file, suffix), )
 }
 
-insert_lines(before = "EXPOSE 80", 
+insert_lines(before = "EXPOSE ", 
              to_add = c("ADD https://github.com/nantesmetropole/school_meal_forecast_xgboost/archive/refs/heads/dev.zip ./",
                         "RUN unzip dev.zip",
                         "RUN mv school_meal_forecast_xgboost-dev/app/ .",
@@ -55,7 +55,10 @@ insert_lines(before = "EXPOSE 80",
                         "RUN rm dev.zip"))
 
 insert_lines(before = "RUN echo", 
-             to_add = c("RUN pip install pandas==1.1.0",
+             to_add = c("RUN pip install virtualenv",
+                        "RUN virtualenv venv",
+                        'ENV PATH="/opt/venv/bin:$PATH"',
+                        "RUN pip install pandas==1.1.0",
                         "RUN pip install numpy==1.19.1",
                         "RUN pip install xgboost==1.1.1",
                         "RUN pip install scikit-learn==0.23.1",
