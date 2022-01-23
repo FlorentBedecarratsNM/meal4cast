@@ -16,6 +16,9 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package( "fs" )
+usethis::use_package( "reticulate" )
+usethis::use_package( "arrow" )
+usethis::use_package( "purrr" )
 
 
 ## Add modules ----

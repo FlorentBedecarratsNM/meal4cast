@@ -5,9 +5,12 @@ Authors@R: person('AUTHOR_FIRST', 'AUTHOR_LAST', email = 'AUTHOR@MAIL.COM', role
 Description: A tool to help civil servants to forecast the school lunch attendance to adjust meal production and reduce food waste.
 License: MIT + file LICENSE
 Imports: 
+    arrow,
     config (>= 0.3.1),
     fs,
     golem (>= 0.3.1),
+    purrr,
+    reticulate,
     shiny (>= 1.7.1)
 Encoding: UTF-8
 LazyData: true
