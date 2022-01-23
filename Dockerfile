@@ -1,8 +1,8 @@
 FROM rocker/r-ver:4.1.2
-RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev python3 python3-pip && rm -rf /var/lib/apt/lists/*
-RUN pip install virtualenv
-RUN virtualenv venv /opt/venv
-# RUN python3 -m venv /opt/venv
+RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev python3 python3-pip python3-venv && rm -rf /var/lib/apt/lists/*
+# RUN pip install virtualenv
+# RUN virtualenv venv /opt/venv
+RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install pandas==1.1.0
 RUN pip install numpy==1.19.1
