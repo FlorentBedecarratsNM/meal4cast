@@ -1,7 +1,7 @@
-FROM rocker/r-ver:4.1.2
-RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev python3 python3-pip python3-venv && rm -rf /var/lib/apt/lists/*
+FROM rocker/r-ver:4.1.1
+RUN apt-get update && apt-get install -y  git-core libcurl4-openssl-dev libgit2-dev libicu-dev libpng-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc python zlib1g-dev python3 python3-pip python3-venv && rm -rf /var/lib/apt/lists/*
 # RUN pip install virtualenv
-# RUN virtualenv venv /opt/venv
+# RUN virtualenv venv
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install pandas==1.1.0
@@ -15,10 +15,13 @@ RUN pip install matplotlib==3.2.1
 RUN pip install python-dateutil==2.8.1
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 RUN R -e 'install.packages("remotes")'
-RUN Rscript -e 'remotes::install_version("fs",upgrade="never", version = "1.5.2")'
+RUN Rscript -e 'remotes::install_version("fs",upgrade="never", version = "1.5.0")'
+RUN Rscript -e 'remotes::install_version("purrr",upgrade="never", version = "0.3.4")'
 RUN Rscript -e 'remotes::install_version("shiny",upgrade="never", version = "1.7.1")'
 RUN Rscript -e 'remotes::install_version("config",upgrade="never", version = "0.3.1")'
+RUN Rscript -e 'remotes::install_version("reticulate",upgrade="never", version = "1.22")'
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.3.1")'
+RUN Rscript -e 'remotes::install_version("arrow",upgrade="never", version = "6.0.0.2")'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone

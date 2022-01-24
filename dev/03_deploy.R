@@ -33,7 +33,8 @@ golem::add_shinyserver_file()
 
 ## Docker ----
 ## If you want to deploy via a generic Dockerfile
-golem::add_dockerfile(extra_sysreqs = c("python3", "python3-pip"))
+golem::add_dockerfile(extra_sysreqs = c("python3", "python3-pip",
+                                        "python3-venv"))
 ## The following lines need to be added to the dockerfile
 # python3 python3-pip ?
 
@@ -55,8 +56,9 @@ insert_lines(before = "EXPOSE ",
                         "RUN rm dev.zip"))
 
 insert_lines(before = "RUN echo", 
-             to_add = c("RUN pip install virtualenv",
-                        "RUN virtualenv venv",
+             to_add = c("# RUN pip install virtualenv",
+                        "# RUN virtualenv venv",
+                        "RUN python3 -m venv /opt/venv",
                         'ENV PATH="/opt/venv/bin:$PATH"',
                         "RUN pip install pandas==1.1.0",
                         "RUN pip install numpy==1.19.1",
