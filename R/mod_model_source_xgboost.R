@@ -43,7 +43,7 @@ mod_model_source_xgboost_server <- function(id){
     
     # Load python environment
     reticulate::use_python("/opt/venv/bin/python3", required = TRUE)
-    reticulate::use_virtualenv("/opt/venv/bin/venv", required = TRUE)
+    reticulate::use_virtualenv("/opt/venv", required = TRUE)
     reticulate::source_python("main.py")
  
   })
