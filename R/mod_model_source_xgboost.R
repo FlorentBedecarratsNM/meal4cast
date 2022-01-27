@@ -1,7 +1,7 @@
 #' model_source_xgboost UI Function
 #'
-#' @description A shiny Module.
-#'
+#' @description This shiny modules launches the python/reticulate parameters.
+#' Server side only.
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd 
@@ -23,22 +23,7 @@ mod_model_source_xgboost_server <- function(id){
     
     # Loading content from prevision repo if not present
     if (!file.exists("main.py")) {
-      # Change these parameters to adjust for repository or branch changes
-      repo <- "school_meal_forecast_xgboost"
-      branch <- "dev"
-      # What follows remain as is
-      destfile <- paste0(branch, ".zip")
-      to_keep <- c("app/", "tests/")
-      unz_folder <- paste0(repo, "-", branch)
-      unz_files <- paste0(unz_folder, "/", to_keep)
-      download.file(url = paste0("https://github.com/nantesmetropole/",
-                                 repo, "/archive/refs/heads/", destfile),
-                                 destfile = destfile)
-      unzip(zipfile = destfile)
-      purrr::map2(unz_files, to_keep, arrow::copy_files) 
-      file.rename(from = paste0(unz_folder, "/main.py"), to = "main.py")
-      unlink(unz_folder, recursive = TRUE)
-      file.remove(destfile)
+      fetch_xgb_model()
     }
     
     # Load python environment
