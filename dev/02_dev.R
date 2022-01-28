@@ -19,7 +19,7 @@ usethis::use_package( "fs" )
 usethis::use_package( "reticulate" )
 usethis::use_package( "arrow" )
 usethis::use_package( "purrr" )
-
+usethis::use_package( "aws.s3" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
