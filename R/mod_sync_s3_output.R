@@ -21,7 +21,7 @@ mod_sync_s3_output_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    if (dir.exists("output")) {
+    if (!dir.exists("output")) {
       dir.create("output")
     }
     aws.s3::s3sync(path = "output", 
