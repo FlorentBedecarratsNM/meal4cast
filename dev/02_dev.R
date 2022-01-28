@@ -25,7 +25,7 @@ usethis::use_package( "purrr" )
 ## Create a module infrastructure in R/
 golem::add_module( name = "admin_list_files" ) # Name of the module
 golem::add_module( name = "model_source_xgboost" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "sync_s3_output" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
 

@@ -15,5 +15,19 @@ spec:
       containers:
         - name: meal4cast
           image: fbedecarrats/meal4cast:latest
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: meal4cast-echos3
+                  key: username
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: meal4cast-echos3
+                  key: password
+            - name: AWS_S3_ENDPOINT
+              value: minio.lab.sspcloud.fr
           ports:
           - containerPort: 80
+    
