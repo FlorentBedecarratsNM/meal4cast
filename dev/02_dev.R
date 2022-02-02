@@ -15,11 +15,14 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
+usethis::use_package( "magrittr" )
+usethis::use_pipe(export = TRUE)
 usethis::use_package( "fs" )
 usethis::use_package( "reticulate" )
 usethis::use_package( "arrow" )
 usethis::use_package( "purrr" )
 usethis::use_package( "aws.s3" )
+usethis::use_package( "dplyr" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -33,7 +36,9 @@ golem::add_module( name = "name_of_module2" ) # Name of the module
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct( "helpers" ) 
-golem::add_utils( "helpers" )
+golem::add_utils( "set_config_variables" )
+golem::add_utils( "gen_opendata_url" )
+golem::add_utils( "create_folder" )
 
 golem::add_fct( "fetch_xgb_model" ) 
 
