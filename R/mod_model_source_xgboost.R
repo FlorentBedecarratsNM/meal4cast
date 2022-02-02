@@ -20,17 +20,10 @@ mod_model_source_xgboost_ui <- function(id){
 mod_model_source_xgboost_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    
-    # Loading content from prevision repo if not present
-    if (!file.exists("main.py")) {
-      fetch_xgb_model()
-    }
-    
     # Load python environment
     reticulate::use_python("/opt/venv/bin/python3", required = TRUE)
     reticulate::use_virtualenv("/opt/venv", required = TRUE)
     reticulate::source_python("main.py")
- 
   })
 
 }

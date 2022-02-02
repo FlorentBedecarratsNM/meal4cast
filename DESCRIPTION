@@ -6,10 +6,14 @@ Description: A tool to help civil servants to forecast the school lunch attendan
 License: MIT + file LICENSE
 Imports: 
     arrow,
+    attempt,
     aws.s3,
     config (>= 0.3.1),
+    DT,
     fs,
+    glue,
     golem (>= 0.3.1),
+    htmltools,
     purrr,
     reticulate,
     shiny (>= 1.7.1)
