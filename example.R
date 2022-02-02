@@ -124,274 +124,274 @@ reticulate::source_python("main.py")
 prepare_arborescence()
 
 # Cette fonction exécute la fonction 'run' avec les paramètres par défaut du readme
-run_verteego <- function(begin_date = '2017-09-30',
-                         column_to_predict = 'reel', 
-                         data_path = "tests/data",
-                         confidence = 0.90,
-                         end_date = '2017-12-15',
-                         prediction_mode=TRUE,
-                         preprocessing=TRUE,
-                         remove_no_school=TRUE,
-                         remove_outliers=TRUE,
-                         school_cafeteria='',
-                         start_training_date='2012-09-01',
-                         training_type='xgb',
-                         weeks_latency=10) {
-  # On passe les arguments à pyton au travers d'une classe
-  args <- reticulate::PyClass(classname = "arguments", 
-                              defs = list(
-                                begin_date = begin_date,
-                                column_to_predict = column_to_predict,
-                                data_path = data_path,
-                                confidence = confidence,
-                                end_date = end_date,
-                                prediction_mode = prediction_mode,
-                                preprocessing = preprocessing,
-                                remove_no_school = remove_no_school,
-                                remove_outliers = remove_outliers,
-                                school_cafeteria = school_cafeteria,
-                                start_training_date = start_training_date,
-                                training_type = training_type,
-                                weeks_latency = weeks_latency))
-  run(args)
-}
+# run_verteego <- function(begin_date = '2017-09-30',
+#                          column_to_predict = 'reel', 
+#                          data_path = "tests/data",
+#                          confidence = 0.90,
+#                          end_date = '2017-12-15',
+#                          prediction_mode=TRUE,
+#                          preprocessing=TRUE,
+#                          remove_no_school=TRUE,
+#                          remove_outliers=TRUE,
+#                          school_cafeteria='',
+#                          start_training_date='2012-09-01',
+#                          training_type='xgb',
+#                          weeks_latency=10) {
+#   # On passe les arguments à pyton au travers d'une classe
+#   args <- reticulate::PyClass(classname = "arguments", 
+#                               defs = list(
+#                                 begin_date = begin_date,
+#                                 column_to_predict = column_to_predict,
+#                                 data_path = data_path,
+#                                 confidence = confidence,
+#                                 end_date = end_date,
+#                                 prediction_mode = prediction_mode,
+#                                 preprocessing = preprocessing,
+#                                 remove_no_school = remove_no_school,
+#                                 remove_outliers = remove_outliers,
+#                                 school_cafeteria = school_cafeteria,
+#                                 start_training_date = start_training_date,
+#                                 training_type = training_type,
+#                                 weeks_latency = weeks_latency))
+#   run(args)
+# }
 
 # R functions -------------------------------------------------------------
 
-# A function to load the outputs of the model forecasts
-load_results <- function(folder = "output", pattern = "results_by_cafeteria.*csv") {
-  prev_results <- dir(folder, pattern = pattern, full.names = TRUE) %>%
-    dplyr::tibble(filename = .)
-  if (nrow(prev_results) > 0 ) {
-    prev_results <- prev_results %>%
-      dplyr::mutate(created = stringr::str_extract(filename, 
-                                                   "[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}"),
-                    variable = stringr::str_extract(filename, 
-                                                    "(?<=cafeteria_)[a-z]*"),
-                    training_type = stringr::str_extract(filename, 
-                                                         "xgb_interval|xgb"),
-                    file_contents = purrr::map(filename, ~ arrow::read_csv_arrow(.))) %>%
-      tidyr::unnest(cols = c(file_contents)) %>%
-      dplyr::arrange(desc(created), desc(training_type)) %>%
-      dplyr::distinct(date_str, variable, cantine_nom, cantine_type, .keep_all = TRUE)
-  } else {
-    prev_results <- NA
-  }
-  return(prev_results)
-}
+# # A function to load the outputs of the model forecasts
+# load_results <- function(folder = "output", pattern = "results_by_cafeteria.*csv") {
+#   prev_results <- dir(folder, pattern = pattern, full.names = TRUE) %>%
+#     dplyr::tibble(filename = .)
+#   if (nrow(prev_results) > 0 ) {
+#     prev_results <- prev_results %>%
+#       dplyr::mutate(created = stringr::str_extract(filename, 
+#                                                    "[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}"),
+#                     variable = stringr::str_extract(filename, 
+#                                                     "(?<=cafeteria_)[a-z]*"),
+#                     training_type = stringr::str_extract(filename, 
+#                                                          "xgb_interval|xgb"),
+#                     file_contents = purrr::map(filename, ~ arrow::read_csv_arrow(.))) %>%
+#       tidyr::unnest(cols = c(file_contents)) %>%
+#       dplyr::arrange(desc(created), desc(training_type)) %>%
+#       dplyr::distinct(date_str, variable, cantine_nom, cantine_type, .keep_all = TRUE)
+#   } else {
+#     prev_results <- NA
+#   }
+#   return(prev_results)
+# }
 # A function to retrieve results' timestamps
-check_results_fresh <- function(folder = "output", pattern = "results_by_cafeteria.*csv") {
-  file.info(dir(folder, pattern, full.names = TRUE))$ctime
-}
+# check_results_fresh <- function(folder = "output", pattern = "results_by_cafeteria.*csv") {
+#   file.info(dir(folder, pattern, full.names = TRUE))$ctime
+# }
 
-# A function to load the input data. Defaults to the index specified above
-load_traindata <- function(name = index$name, path = index$path) {
-  dt <- purrr::map(path, ~ arrow::read_csv_arrow(.)) %>%
-    purrr::set_names(name)
-}
+# # A function to load the input data. Defaults to the index specified above
+# load_traindata <- function(name = index$name, path = index$path) {
+#   dt <- purrr::map(path, ~ arrow::read_csv_arrow(.)) %>%
+#     purrr::set_names(name)
+# }
 
-# A function to retrieve training data time stamps
-check_traindata_fresh <- function(path = index$path) {
-  file.info(path)$ctime
-}
+# # A function to retrieve training data time stamps
+# check_traindata_fresh <- function(path = index$path) {
+#   file.info(path)$ctime
+# }
 
-# A function to generate inter-vacation periods from the vacation calendar
-gen_piv <- function(vacations) {
-  vacations %>%
-    dplyr::filter(vacances_nom != "Pont de l'Ascension") %>%
-    unique() %>%
-    dplyr::arrange(date_debut) %>%
-    dplyr::mutate(piv_nom2 = stringr::str_remove(vacances_nom, 
-                                                 "Vacances (d'|de la |de )"),
-                  piv_nom2 = stringr::str_replace(piv_nom2, "Avril", "Printemps"),
-                  piv_nom2 = stringr::str_replace(piv_nom2, "Début des Été", "Ete"),
-                  piv_nom1 = dplyr::lag(piv_nom2, 1),
-                  periode = paste(piv_nom1, piv_nom2, sep = "-"),
-                  `Début` = dplyr::lag(date_fin, 1),
-                  Fin = date_debut)  %>%
-    dplyr::filter(!is.na(piv_nom1)) %>%
-    dplyr::select(annee = annee_scolaire,periode, `Début`, `Fin`) %>%
-    dplyr::mutate(periode = stringi::stri_trans_general(str = periode, id = "Latin-ASCII"),
-                  periode = factor(periode, c(
-                    "Ete-Toussaint", "Toussaint-Noel", "Noel-Hiver", "Hiver-Printemps",
-                    "Printemps-Ete")))
-}
+# # A function to generate inter-vacation periods from the vacation calendar
+# gen_piv <- function(vacations) {
+#   vacations %>%
+#     dplyr::filter(vacances_nom != "Pont de l'Ascension") %>%
+#     unique() %>%
+#     dplyr::arrange(date_debut) %>%
+#     dplyr::mutate(piv_nom2 = stringr::str_remove(vacances_nom, 
+#                                                  "Vacances (d'|de la |de )"),
+#                   piv_nom2 = stringr::str_replace(piv_nom2, "Avril", "Printemps"),
+#                   piv_nom2 = stringr::str_replace(piv_nom2, "Début des Été", "Ete"),
+#                   piv_nom1 = dplyr::lag(piv_nom2, 1),
+#                   periode = paste(piv_nom1, piv_nom2, sep = "-"),
+#                   `Début` = dplyr::lag(date_fin, 1),
+#                   Fin = date_debut)  %>%
+#     dplyr::filter(!is.na(piv_nom1)) %>%
+#     dplyr::select(annee = annee_scolaire,periode, `Début`, `Fin`) %>%
+#     dplyr::mutate(periode = stringi::stri_trans_general(str = periode, id = "Latin-ASCII"),
+#                   periode = factor(periode, c(
+#                     "Ete-Toussaint", "Toussaint-Noel", "Noel-Hiver", "Hiver-Printemps",
+#                     "Printemps-Ete")))
+# }
 
-# A function to inventory the available data 
-compute_availability <- function(x) {
-  avail_strikes <- x$strikes %>%
-    dplyr::mutate("avail_data" = "Grèves") %>%
-    dplyr::select(date, avail_data, n= greve)
-  
-  # Compute the number of values of staff previsions and kid attendance
-  avail_freqs <- x$freqs %>%
-    dplyr::select(date, prevision, reel) %>%
-    tidyr::pivot_longer(cols = -date, names_to = "avail_data") %>%
-    dplyr::mutate(avail_data = dplyr::recode(avail_data,
-                                             prevision = "Commandes",
-                                             reel = "Fréquentation")) %>%
-    dplyr::group_by(date, avail_data) %>%
-    dplyr::summarise(n = dplyr::n())
-  
-  # Compute the number of menu items registered per day 
-  avail_menus <- x$menus %>%
-    dplyr::mutate("avail_data" = "Menus",
-                  date = lubridate::dmy(date)) %>%
-    dplyr::group_by(date, avail_data) %>%
-    dplyr::summarise(n = dplyr::n())
-  
-  # Vacances  
-  vacs <- x$vacs
-  
-  vacs_dates <- purrr:::map2(vacs$date_debut, vacs$date_fin, 
-                             ~ seq(.x, .y, by = "1 day")) %>%
-    purrr::reduce(c)
-  
-  avail_vacs <-tidyr::tibble(
-    date = vacs_dates,
-    avail_data = "Vacances",
-    n = 1)
-  
-  avail_holidays <- x$holidays %>%
-    dplyr::mutate(avail_data = "Fériés") %>%
-    dplyr::select(date, avail_data, n = jour_ferie)
-  
-  avail_data <- dplyr::bind_rows(avail_freqs, avail_menus, avail_strikes,
-                                 avail_vacs) %>%
-    dplyr::bind_rows(dplyr::filter(avail_holidays,
-                                   date <= max(.$date),
-                                   date >= (min(.$date)))) %>%
-    dplyr::mutate(annee = lubridate::year(date),
-                  an_scol_start = ifelse(lubridate::month(date) > 8, 
-                                         lubridate::year(date), 
-                                         lubridate::year(date)-1),
-                  an_scol = paste(an_scol_start, an_scol_start+1, sep = "-"),
-                  an_scol = forcats::fct_rev(an_scol),
-                  `Jour` = lubridate::ymd(
-                    paste(ifelse(lubridate::month(date) > 8, "1999", "2000"),
-                          lubridate::month(date), lubridate::day(date), sep = "-"))) %>%
-    dplyr::group_by(an_scol, avail_data) %>%
-    dplyr::mutate(max_year_var = max(n, na.rm = TRUE),
-                  nday_vs_nyearmax = n / max_year_var) %>%
-    dplyr::mutate(avail_data = factor(avail_data,
-                                      levels = c("Vacances", "Fériés", "Grèves", "Menus", "Commandes", "Fréquentation")))
-  return(avail_data)
-}
+# # A function to inventory the available data 
+# compute_availability <- function(x) {
+#   avail_strikes <- x$strikes %>%
+#     dplyr::mutate("avail_data" = "Grèves") %>%
+#     dplyr::select(date, avail_data, n= greve)
+#   
+#   # Compute the number of values of staff previsions and kid attendance
+#   avail_freqs <- x$freqs %>%
+#     dplyr::select(date, prevision, reel) %>%
+#     tidyr::pivot_longer(cols = -date, names_to = "avail_data") %>%
+#     dplyr::mutate(avail_data = dplyr::recode(avail_data,
+#                                              prevision = "Commandes",
+#                                              reel = "Fréquentation")) %>%
+#     dplyr::group_by(date, avail_data) %>%
+#     dplyr::summarise(n = dplyr::n())
+#   
+#   # Compute the number of menu items registered per day 
+#   avail_menus <- x$menus %>%
+#     dplyr::mutate("avail_data" = "Menus",
+#                   date = lubridate::dmy(date)) %>%
+#     dplyr::group_by(date, avail_data) %>%
+#     dplyr::summarise(n = dplyr::n())
+#   
+#   # Vacances  
+#   vacs <- x$vacs
+#   
+#   vacs_dates <- purrr:::map2(vacs$date_debut, vacs$date_fin, 
+#                              ~ seq(.x, .y, by = "1 day")) %>%
+#     purrr::reduce(c)
+#   
+#   avail_vacs <-tidyr::tibble(
+#     date = vacs_dates,
+#     avail_data = "Vacances",
+#     n = 1)
+#   
+#   avail_holidays <- x$holidays %>%
+#     dplyr::mutate(avail_data = "Fériés") %>%
+#     dplyr::select(date, avail_data, n = jour_ferie)
+#   
+#   avail_data <- dplyr::bind_rows(avail_freqs, avail_menus, avail_strikes,
+#                                  avail_vacs) %>%
+#     dplyr::bind_rows(dplyr::filter(avail_holidays,
+#                                    date <= max(.$date),
+#                                    date >= (min(.$date)))) %>%
+#     dplyr::mutate(annee = lubridate::year(date),
+#                   an_scol_start = ifelse(lubridate::month(date) > 8, 
+#                                          lubridate::year(date), 
+#                                          lubridate::year(date)-1),
+#                   an_scol = paste(an_scol_start, an_scol_start+1, sep = "-"),
+#                   an_scol = forcats::fct_rev(an_scol),
+#                   `Jour` = lubridate::ymd(
+#                     paste(ifelse(lubridate::month(date) > 8, "1999", "2000"),
+#                           lubridate::month(date), lubridate::day(date), sep = "-"))) %>%
+#     dplyr::group_by(an_scol, avail_data) %>%
+#     dplyr::mutate(max_year_var = max(n, na.rm = TRUE),
+#                   nday_vs_nyearmax = n / max_year_var) %>%
+#     dplyr::mutate(avail_data = factor(avail_data,
+#                                       levels = c("Vacances", "Fériés", "Grèves", "Menus", "Commandes", "Fréquentation")))
+#   return(avail_data)
+# }
 
-# A function to transform data from Fusion for training data
-transform_fusion <- function(x, check_against) {
-  x %>%
-    dplyr::rename(date = DATPLGPRESAT, site_nom = NOMSAT, repas = LIBPRE, convive = LIBCON,
-                  reel = TOTEFFREE, prev = TOTEFFPREV) %>%
-    dplyr::filter(repas == "DEJEUNER") %>%
-    dplyr::filter(stringr::str_starts(site_nom, "CL", negate = TRUE)) %>%
-    dplyr::filter(stringr::str_detect(site_nom, "TOURNEE", negate = TRUE)) %>%
-    dplyr::select(-repas) %>%
-    dplyr::mutate(convive = dplyr::recode(convive, 
-                                          "1MATER." = "maternelle",
-                                          "2GS." = "grande_section",
-                                          "3PRIMAIRE" = "primaire",
-                                          "4ADULTE" = "adulte"),
-                  site_id = stringr::str_remove(site_nom, "[0-9]{3}"),
-                  site_nom = stringr::str_remove(site_nom, "[0-9]{3} "),
-                  site_nom = stringr::str_replace(site_nom, "COUDRAY MAT", "COUDRAY M\\."),
-                  site_nom = stringr::str_replace(site_nom, "MAT", "M"),
-                  site_nom = stringr::str_replace(site_nom, "COUDRAY ELEM", "COUDRAY E\\."),
-                  site_nom = stringr::str_replace(site_nom, "ELEM", "E"),
-                  site_nom = stringr::str_remove(site_nom, " M/E"),
-                  site_nom = stringr::str_remove(site_nom, " PRIM"),
-                  site_nom = stringr::str_remove(site_nom, "\\(.*\\)$"),
-                  site_nom = stringr::str_trim(site_nom),
-                  site_nom = stringr::str_replace(site_nom, "BAUT", "LE BAUT"),
-                  site_nom = stringr::str_replace(site_nom, "  ", " "),
-                  site_nom = stringr::str_replace(site_nom, "FOURNIER", "FOURNIER E"),
-                  site_nom = stringr::str_replace(site_nom, " E / ", "/"),
-                  site_nom = stringr::str_replace(site_nom, "MACE$", "MACE M"),
-                  site_nom = ifelse(!(site_nom %in% check_against) & stringr::str_ends(site_nom, " (E|M)"),
-                                    stringr::str_remove(site_nom, " (E|M)$"), site_nom),
-                  site_nom = stringr::str_replace(site_nom, "A.LEDRU-ROLLIN/S.BERNHARDT", 
-                                                  "LEDRU ROLLIN/SARAH BERNHARDT"),
-                  site_nom = stringr::str_replace(site_nom, "F.DALLET/DOCT TEILLAIS", 
-                                                  "FRANCOIS DALLET/DOCTEUR TEILLAIS")) %>%
-    dplyr::group_by(date, site_id, site_nom, convive) %>%
-    dplyr::summarise(reel = sum(reel, na.rm = TRUE),
-                     prev = sum(prev, na.rm = TRUE)) %>%
-    tidyr::pivot_wider(names_from = convive, values_from = c(reel, prev),
-                       values_fill = 0) %>%
-    dplyr::mutate(reel = reel_maternelle + reel_grande_section + reel_primaire + reel_adulte,
-                  prevision = prev_maternelle + prev_grande_section + prev_primaire + prev_adulte,
-                  date = lubridate::date(date)) # %>%
-  # dplyr::select(site_id, site_nom, site_type, date, prevision, reel)
-}
+# # A function to transform data from Fusion for training data
+# transform_fusion <- function(x, check_against) {
+#   x %>%
+#     dplyr::rename(date = DATPLGPRESAT, site_nom = NOMSAT, repas = LIBPRE, convive = LIBCON,
+#                   reel = TOTEFFREE, prev = TOTEFFPREV) %>%
+#     dplyr::filter(repas == "DEJEUNER") %>%
+#     dplyr::filter(stringr::str_starts(site_nom, "CL", negate = TRUE)) %>%
+#     dplyr::filter(stringr::str_detect(site_nom, "TOURNEE", negate = TRUE)) %>%
+#     dplyr::select(-repas) %>%
+#     dplyr::mutate(convive = dplyr::recode(convive, 
+#                                           "1MATER." = "maternelle",
+#                                           "2GS." = "grande_section",
+#                                           "3PRIMAIRE" = "primaire",
+#                                           "4ADULTE" = "adulte"),
+#                   site_id = stringr::str_remove(site_nom, "[0-9]{3}"),
+#                   site_nom = stringr::str_remove(site_nom, "[0-9]{3} "),
+#                   site_nom = stringr::str_replace(site_nom, "COUDRAY MAT", "COUDRAY M\\."),
+#                   site_nom = stringr::str_replace(site_nom, "MAT", "M"),
+#                   site_nom = stringr::str_replace(site_nom, "COUDRAY ELEM", "COUDRAY E\\."),
+#                   site_nom = stringr::str_replace(site_nom, "ELEM", "E"),
+#                   site_nom = stringr::str_remove(site_nom, " M/E"),
+#                   site_nom = stringr::str_remove(site_nom, " PRIM"),
+#                   site_nom = stringr::str_remove(site_nom, "\\(.*\\)$"),
+#                   site_nom = stringr::str_trim(site_nom),
+#                   site_nom = stringr::str_replace(site_nom, "BAUT", "LE BAUT"),
+#                   site_nom = stringr::str_replace(site_nom, "  ", " "),
+#                   site_nom = stringr::str_replace(site_nom, "FOURNIER", "FOURNIER E"),
+#                   site_nom = stringr::str_replace(site_nom, " E / ", "/"),
+#                   site_nom = stringr::str_replace(site_nom, "MACE$", "MACE M"),
+#                   site_nom = ifelse(!(site_nom %in% check_against) & stringr::str_ends(site_nom, " (E|M)"),
+#                                     stringr::str_remove(site_nom, " (E|M)$"), site_nom),
+#                   site_nom = stringr::str_replace(site_nom, "A.LEDRU-ROLLIN/S.BERNHARDT", 
+#                                                   "LEDRU ROLLIN/SARAH BERNHARDT"),
+#                   site_nom = stringr::str_replace(site_nom, "F.DALLET/DOCT TEILLAIS", 
+#                                                   "FRANCOIS DALLET/DOCTEUR TEILLAIS")) %>%
+#     dplyr::group_by(date, site_id, site_nom, convive) %>%
+#     dplyr::summarise(reel = sum(reel, na.rm = TRUE),
+#                      prev = sum(prev, na.rm = TRUE)) %>%
+#     tidyr::pivot_wider(names_from = convive, values_from = c(reel, prev),
+#                        values_fill = 0) %>%
+#     dplyr::mutate(reel = reel_maternelle + reel_grande_section + reel_primaire + reel_adulte,
+#                   prevision = prev_maternelle + prev_grande_section + prev_primaire + prev_adulte,
+#                   date = lubridate::date(date)) # %>%
+#   # dplyr::select(site_id, site_nom, site_type, date, prevision, reel)
+# }
 
-load_fusion <- function(x, freqs) {
-  new_days <- x %>%
-    dplyr::anti_join(freqs, by = c("date", "site_nom"))
-  
-  alert_exist <- ""
-  if (!("reel_adulte" %in% colnames(freqs))) {
-    exist_days <- x %>%
-      dplyr::select(-reel, -prevision) %>%
-      dplyr::inner_join(dplyr::select(freqs, -reel, -prevision, -site_type), 
-                        by = c("date", "site_nom"))
-    alert_exist <- paste("Complément des fréquentation par type de convive pour",
-                         nrow(exist_days), 
-                         "effectifs de repas par établissement pour",
-                         length(unique(exist_days$date)), 
-                         "jours de service.\n")
-    freqs <- freqs %>%
-      dplyr::left_join(exist_days, by = c("date", "site_nom"))
-  }
-  freqs <- dplyr::bind_rows(freqs, new_days) %>%
-    readr::write_csv(index$path[index$name == "freqs"])
-  alert_new <- paste("Ajout des fréquentation par type de convive pour",
-                     nrow(new_days), 
-                     "effectifs de repas par établissement pour",
-                     length(unique(new_days$date)), 
-                     "jours de service.")
-  
-  shinyalert(title = "Import depuis le fichier issu de Fusion réussi !",
-             text = paste0(alert_exist, alert_new),
-             type = "success")
-}
+# load_fusion <- function(x, freqs) {
+#   new_days <- x %>%
+#     dplyr::anti_join(freqs, by = c("date", "site_nom"))
+#   
+#   alert_exist <- ""
+#   if (!("reel_adulte" %in% colnames(freqs))) {
+#     exist_days <- x %>%
+#       dplyr::select(-reel, -prevision) %>%
+#       dplyr::inner_join(dplyr::select(freqs, -reel, -prevision, -site_type), 
+#                         by = c("date", "site_nom"))
+#     alert_exist <- paste("Complément des fréquentation par type de convive pour",
+#                          nrow(exist_days), 
+#                          "effectifs de repas par établissement pour",
+#                          length(unique(exist_days$date)), 
+#                          "jours de service.\n")
+#     freqs <- freqs %>%
+#       dplyr::left_join(exist_days, by = c("date", "site_nom"))
+#   }
+#   freqs <- dplyr::bind_rows(freqs, new_days) %>%
+#     readr::write_csv(index$path[index$name == "freqs"])
+#   alert_new <- paste("Ajout des fréquentation par type de convive pour",
+#                      nrow(new_days), 
+#                      "effectifs de repas par établissement pour",
+#                      length(unique(new_days$date)), 
+#                      "jours de service.")
+#   
+#   shinyalert::shinyalert(title = "Import depuis le fichier issu de Fusion réussi !",
+#              text = paste0(alert_exist, alert_new),
+#              type = "success")
+# }
 
 # A function to generate a vector of school years
-schoolyears <- function(year_start, year_end) {
-  if(!(year_start > 2000 & year_end < 2050 & year_start < year_end)) {
-    print("Specified year must be integers between 2000 and 2050 and start must be before end.")
-  } else {
-    left_side <- year_start:year_end
-    right_side <- left_side + 1
-    schoolyears <- paste(left_side, right_side, sep = "-")
-    return (schoolyears)
-  }
-}
+# gen_schoolyears <- function(year_start, year_end) {
+#   if(!(year_start > 2000 & year_end < 2050 & year_start < year_end)) {
+#     print("Specified year must be integers between 2000 and 2050 and start must be before end.")
+#   } else {
+#     left_side <- year_start:year_end
+#     right_side <- left_side + 1
+#     schoolyears <- paste(left_side, right_side, sep = "-")
+#     return (schoolyears)
+#   }
+# }
+# TODO : include this in server module.
+# hc_years <- gen_schoolyears(schoolyear_hq_start, schoolyear_hq_end)
 
-hc_years <- schoolyears(schoolyear_hq_start, schoolyear_hq_end)
-
-# A function to enrich cafet list after frequentation import
-update_mapping_cafet_freq <- function(x, 
-                                      map_freq_loc = paste0(data_path,
-                                                            "/mappings/mapping_frequentation_cantines.csv")) {
-  map_freq <-  readr::read_csv(map_freq_loc)
-  
-  new_site_names <- x %>%
-    dplyr::select(site_nom) %>%
-    unique() %>%
-    dplyr::filter(!(site_nom %in% map_freq$site_nom)) %>%
-    dplyr::left_join(dplyr::select(x, site_nom, site_type), by = "site_nom") %>%
-    unique() %>%
-    dplyr::mutate(site_type = ifelse(is.na(site_type), "M/E", site_type),
-                  cantine_nom = site_nom,
-                  cantine_type = site_type)
-  
-  if (nrow(new_site_names) > 0) {
-    map_freq <- map_freq %>%
-      dplyr::bind_rows(new_site_names)
-    readr::write_csv(map_freq, map_freq_loc)
-  }
-  
-}
+# # A function to enrich cafet list after frequentation import
+# update_mapping_cafet_freq <- function(x, 
+#                                       map_freq_loc = paste0(data_path,
+#                                                             "/mappings/mapping_frequentation_cantines.csv")) {
+#   map_freq <-  readr::read_csv(map_freq_loc)
+#   
+#   new_site_names <- x %>%
+#     dplyr::select(site_nom) %>%
+#     unique() %>%
+#     dplyr::filter(!(site_nom %in% map_freq$site_nom)) %>%
+#     dplyr::left_join(dplyr::select(x, site_nom, site_type), by = "site_nom") %>%
+#     unique() %>%
+#     dplyr::mutate(site_type = ifelse(is.na(site_type), "M/E", site_type),
+#                   cantine_nom = site_nom,
+#                   cantine_type = site_type)
+#   
+#   if (nrow(new_site_names) > 0) {
+#     map_freq <- map_freq %>%
+#       dplyr::bind_rows(new_site_names)
+#     readr::write_csv(map_freq, map_freq_loc)
+#   }
+#   
+# }
 
 # a function to sync training data or generated previsions to SSPCloud
 sync_ssp_cloud <- function(folders) {
@@ -411,47 +411,47 @@ sync_ssp_cloud <- function(folders) {
   }
 }
 
-# A function to check that mapping include all occurrences and display a 
-# meaningful message
-not_in <- function(x, y, index = index) {
-  # extract function argument
-  my_x <- deparse(substitute(x))
-  my_y <- deparse(substitute(y))
-  # check that arguments literals have the right format
-  if (!(stringr::str_detect(my_x, "(.*[:alpha:]|_)*\\$.*$") & 
-        stringr::str_detect(my_y, "([:alpha:]|_)*\\$.*$"))) {
-    print(my_x)
-    print(my_y)
-    print("argument for {not in} must look like 'dataframe$column'")
-    stop()
-  }
-  # parse argument to provide helpful messages
-  # left part of the argument
-  x_ds <- my_x %>%
-    stringr::str_remove("dt\\(\\)\\$") %>%
-    stringr::str_extract("([:alpha:]|_)*\\$") %>%
-    stringr::str_remove("\\$")
-  y_ds <- my_y %>%
-    stringr::str_remove("dt\\(\\)\\$") %>%
-    stringr::str_extract("([:alpha:]|_)*\\$") %>%
-    stringr::str_remove("\\$")
-  # right part of the function argument
-  x_col <- stringr::str_extract(my_x, "([:alpha:]|_)*$")
-  y_col <- stringr::str_extract(my_y, "([:alpha:]|_)*$")
-  # Extract the missmatches
-  x <- unique(x)
-  missings <- x[!(x %in% y)]
-  n_miss <- length(missings)
-  
-  # Prepare message element
-  if (n_miss > 0) {
-    out <- paste0(n_miss, " établissement(s) mentionné(s) dans le champ ",
-                  x_col, " du fichier ", my_x,
-                  " mais pas dans le champ ", y_col,
-                  " du fichier ", my_y, " : ",
-                  paste(missings, collapse = ", "), ".")
-  }
-}
+# # A function to check that mapping include all occurrences and display a 
+# # meaningful message
+# not_in <- function(x, y, index = index) {
+#   # extract function argument
+#   my_x <- deparse(substitute(x))
+#   my_y <- deparse(substitute(y))
+#   # check that arguments literals have the right format
+#   if (!(stringr::str_detect(my_x, "(.*[:alpha:]|_)*\\$.*$") & 
+#         stringr::str_detect(my_y, "([:alpha:]|_)*\\$.*$"))) {
+#     print(my_x)
+#     print(my_y)
+#     print("argument for {not in} must look like 'dataframe$column'")
+#     stop()
+#   }
+#   # parse argument to provide helpful messages
+#   # left part of the argument
+#   x_ds <- my_x %>%
+#     stringr::str_remove("dt\\(\\)\\$") %>%
+#     stringr::str_extract("([:alpha:]|_)*\\$") %>%
+#     stringr::str_remove("\\$")
+#   y_ds <- my_y %>%
+#     stringr::str_remove("dt\\(\\)\\$") %>%
+#     stringr::str_extract("([:alpha:]|_)*\\$") %>%
+#     stringr::str_remove("\\$")
+#   # right part of the function argument
+#   x_col <- stringr::str_extract(my_x, "([:alpha:]|_)*$")
+#   y_col <- stringr::str_extract(my_y, "([:alpha:]|_)*$")
+#   # Extract the missmatches
+#   x <- unique(x)
+#   missings <- x[!(x %in% y)]
+#   n_miss <- length(missings)
+#   
+#   # Prepare message element
+#   if (n_miss > 0) {
+#     out <- paste0(n_miss, " établissement(s) mentionné(s) dans le champ ",
+#                   x_col, " du fichier ", my_x,
+#                   " mais pas dans le champ ", y_col,
+#                   " du fichier ", my_y, " : ",
+#                   paste(missings, collapse = ", "), ".")
+#   }
+# }
 
 # UI ----------------------------------------------------------------------
 ui <- navbarPage("Prévoir commandes et fréquentation", id = "tabs",

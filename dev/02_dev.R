@@ -23,6 +23,13 @@ usethis::use_package( "arrow" )
 usethis::use_package( "purrr" )
 usethis::use_package( "aws.s3" )
 usethis::use_package( "dplyr" )
+usethis::use_package( "stringr" )
+usethis::use_package( "tidyr" )
+usethis::use_package( "stringi" )
+usethis::use_package( "lubridate" )
+usethis::use_package( "forcats" )
+usethis::use_package( "shinyalert" )
+usethis::use_package( "readr" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -36,6 +43,22 @@ golem::add_module( name = "name_of_module2" ) # Name of the module
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct( "helpers" ) 
+golem::add_fct( "run_xgboost" )
+golem::add_fct( "load_results" )
+golem::add_fct( "check_results_fresh" )
+golem::add_fct( "load_traindata" )
+golem::add_fct( "check_traindata_fresh" )
+golem::add_fct( "gen_piv" )
+golem::add_fct( "compute_availability" )
+golem::add_fct( "transform_fusion" )
+golem::add_fct( "load_fusion" )
+golem::add_fct( "gen_schoolyears" )
+golem::add_fct( "update_mapping_cafet_freq" )
+golem::add_fct( "not_in" )
+
+
+
+
 golem::add_utils( "set_config_variables" )
 golem::add_utils( "gen_opendata_url" )
 golem::add_utils( "create_folder" )

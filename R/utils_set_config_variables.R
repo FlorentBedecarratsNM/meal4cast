@@ -25,6 +25,9 @@ set_config_variables <- function() {
   schoolyear_hq_start <<- 2010
   schoolyear_hq_end <<- 2025
   
+  # Produce a list of schoolyears
+  hc_years <- gen_schoolyears(schoolyear_hq_start, schoolyear_hq_end)
+  
   # A parameter for the display of widgets on the "load data" page
   width_load_widgets <<- "317px"
   
