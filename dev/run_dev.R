@@ -1,3 +1,5 @@
+install.packages(c("golem", "shinyalert", "reticulate"))
+
 # Set options here
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
 
@@ -10,3 +12,4 @@ golem::document_and_reload()
 
 # Run the application
 run_app()
+

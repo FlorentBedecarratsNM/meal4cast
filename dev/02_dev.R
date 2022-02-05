@@ -30,6 +30,7 @@ usethis::use_package( "lubridate" )
 usethis::use_package( "forcats" )
 usethis::use_package( "shinyalert" )
 usethis::use_package( "readr" )
+usethis::use_package( "bslib" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -39,6 +40,11 @@ golem::add_module( name = "model_source_xgboost" ) # Name of the module
 golem::add_module( name = "sync_s3_output" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "ui_01_browse_data" ) # Name of the module
+golem::add_module( name = "ui_02_load_data" ) # Name of the module
+golem::add_module( name = "ui_03_run_model" ) # Name of the module
+golem::add_module( name = "ui_04_monitor" ) # Name of the module
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
