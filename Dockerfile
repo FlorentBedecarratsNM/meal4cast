@@ -31,7 +31,7 @@ RUN Rscript -e 'remotes::install_version("readr",upgrade="never", version = "2.0
 RUN Rscript -e 'remotes::install_version("tidyr",upgrade="never", version = "1.1.3")'
 RUN Rscript -e 'remotes::install_version("DBI",upgrade="never", version = "1.1.1")'
 RUN Rscript -e 'remotes::install_version("config",upgrade="never", version = "0.3.1")'
-RUN Rscript -e 'remotes::install_version("waiter",upgrade="never", version = "0.2.4.9000")'
+RUN Rscript -e 'remotes::install_version("waiter",upgrade="never", version = "0.2.5")'
 RUN Rscript -e 'remotes::install_version("shinyalert",upgrade="never", version = "2.0.0")'
 RUN Rscript -e 'remotes::install_version("reticulate",upgrade="never", version = "1.20")'
 RUN Rscript -e 'remotes::install_version("readxl",upgrade="never", version = "1.3.1")'
