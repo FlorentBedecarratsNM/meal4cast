@@ -10,6 +10,7 @@
 mod_ui_01_browse_data_ui <- function(id){
   ns <- NS(id)
   tagList(
+    
     # Hide temporary error messages
     tags$style(type="text/css",
                ".shiny-output-error { visibility: hidden; }",

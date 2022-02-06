@@ -15,22 +15,42 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
+
 usethis::use_package( "magrittr" )
 usethis::use_pipe(export = TRUE)
-usethis::use_package( "fs" )
-usethis::use_package( "reticulate" )
 usethis::use_package( "arrow" )
-usethis::use_package( "purrr" )
 usethis::use_package( "aws.s3" )
+usethis::use_package( "bslib" )
+usethis::use_package( "DBI" )
 usethis::use_package( "dplyr" )
+usethis::use_package( "forcats" )
+usethis::use_package( "fs" )
+usethis::use_package( "httr" )
+usethis::use_package( "lubridate" )
+usethis::use_package( "odbc" )
+usethis::use_package( "plotly" )
+usethis::use_package( "purrr" )
+usethis::use_package( "readODS" )
+usethis::use_package( "readr" )
+usethis::use_package( "readxl" )
+usethis::use_package( "reticulate" )
+usethis::use_package( "shinyalert" )
+usethis::use_package( "stringi" )
 usethis::use_package( "stringr" )
 usethis::use_package( "tidyr" )
-usethis::use_package( "stringi" )
-usethis::use_package( "lubridate" )
-usethis::use_package( "forcats" )
-usethis::use_package( "shinyalert" )
-usethis::use_package( "readr" )
+usethis::use_package( "waiter" )
+
+
 usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+usethis::use_package( "bslib" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/

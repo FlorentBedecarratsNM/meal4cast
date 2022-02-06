@@ -10,6 +10,7 @@ Imports:
     aws.s3,
     bslib,
     config (>= 0.3.1),
+    DBI,
     dplyr,
     DT,
     forcats,
@@ -17,16 +18,22 @@ Imports:
     glue,
     golem (>= 0.3.1),
     htmltools,
+    httr,
     lubridate,
     magrittr,
+    odbc,
+    plotly,
     purrr,
+    readODS,
     readr,
+    readxl,
     reticulate,
     shiny (>= 1.7.1),
     shinyalert,
     stringi,
     stringr,
-    tidyr
+    tidyr,
+    waiter
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2

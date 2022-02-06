@@ -46,13 +46,13 @@
 # reticulate::use_virtualenv(virtualenv = virtualenv_dir, required = TRUE)
 
 # Libraries -------------------------------------------------------------------
-install_load(pkgs_to_load, to_load = TRUE)
-install_load(pkgs_not_load)
+# install_load(pkgs_to_load, to_load = TRUE)
+# install_load(pkgs_not_load)
 
 library(magrittr)
-library(lubridate)
+# library(lubridate)
 library(shinyalert)
-library(waiter)
+# library(waiter)
 # library(dplyr)
 # library(tidyr)
 
@@ -367,7 +367,7 @@ prepare_arborescence()
 #   }
 # }
 # TODO : include this in server module.
-# hc_years <- gen_schoolyears(schoolyear_hq_start, schoolyear_hq_end)
+hc_years <- gen_schoolyears(schoolyear_hq_start, schoolyear_hq_end)
 
 # # A function to enrich cafet list after frequentation import
 # update_mapping_cafet_freq <- function(x, 
@@ -484,9 +484,9 @@ ui <- navbarPage("Prévoir commandes et fréquentation", id = "tabs",
                  
                  ## Import new data ------------------------------------------------------
                  tabPanel("Charger des données",
-                          autoWaiter(id = "available_data",
+                          waiter::autoWaiter(id = "available_data",
                                      html = tagList(
-                                       spin_flower(),
+                                       waiter::spin_flower(),
                                        h4("Inventaire en cours, patientez 20 secondes environ...")
                                      )),
                           shinyalert::useShinyalert(),
@@ -798,7 +798,7 @@ server <- function(session, input, output) {
     if (any(is.na(prev()))) {
       max(dt()$freqs$date)
     } else {
-      max(ymd(prev()$date_str))
+      max(lubridate::ymd(prev()$date_str))
     }
   })
   
@@ -809,61 +809,61 @@ server <- function(session, input, output) {
   
   # Navigation - bouton "Après" ---------------------------------------------
   
-  # observeEvent(input$apres, {
-  #   period_rank <- which(periods() == input$select_period)
-  #   if (period_rank == 5) {
-  #     year_rank <- which(years() == input$select_year)
-  #     if (year_rank == 1) {
-  #       shinyalert::shinyalert("Attention",
-  #                              paste("Les données ne sont pas préparées
-  #                                      pour des dates après l'année scolaire", 
-  #                                    input$select_year, "."), 
-  #                              type = "error", html = TRUE)
-  #     } else {
-  #       new_year <- years()[year_rank - 1]
-  #       updateSelectInput(inputId = "select_period",
-  #                         choices = periods(),
-  #                         selected = "Ete-Toussaint")
-  #       updateSelectInput(inputId = "select_year",
-  #                         choices = years(),
-  #                         selected = new_year)
-  #     }
-  #   } else {
-  #     new_period <- periods()[period_rank + 1]
-  #     updateSelectInput(inputId = "select_period",
-  #                       choices = periods(),
-  #                       selected = new_period)
-  #   }
-  # })
+  observeEvent(input$apres, {
+    period_rank <- which(periods() == input$select_period)
+    if (period_rank == 5) {
+      year_rank <- which(years() == input$select_year)
+      if (year_rank == 1) {
+        shinyalert::shinyalert("Attention",
+                               paste("Les données ne sont pas préparées
+                                       pour des dates après l'année scolaire",
+                                     input$select_year, "."),
+                               type = "error", html = TRUE)
+      } else {
+        new_year <- years()[year_rank - 1]
+        updateSelectInput(inputId = "select_period",
+                          choices = periods(),
+                          selected = "Ete-Toussaint")
+        updateSelectInput(inputId = "select_year",
+                          choices = years(),
+                          selected = new_year)
+      }
+    } else {
+      new_period <- periods()[period_rank + 1]
+      updateSelectInput(inputId = "select_period",
+                        choices = periods(),
+                        selected = new_period)
+    }
+  })
   
   # Navigation - bouton "Avant" ---------------------------------------------
   
-  # observeEvent(input$avant, {
-  #   period_rank <- which(periods() == input$select_period)
-  #   if (period_rank == 1) {
-  #     year_rank <- which(years() == input$select_year)
-  #     if (year_rank == length(years())) {
-  #       shinyalert::shinyalert("Attention",
-  #                              paste("Les données ne sont pas préparées
-  #                                      pour des dates avant l'année scolaire", 
-  #                                    input$select_year, "."), 
-  #                              type = "error", html = TRUE)
-  #     } else {
-  #       new_year <- years()[year_rank + 1]
-  #       updateSelectInput(inputId = "select_period",
-  #                         choices = periods(),
-  #                         selected = "Avril-Ete")
-  #       updateSelectInput(inputId = "select_year",
-  #                         choices = years(),
-  #                         selected = new_year)
-  #     }
-  #   } else {
-  #     new_period <- periods()[period_rank - 1]
-  #     updateSelectInput(inputId = "select_period",
-  #                       choices = periods(),
-  #                       selected = new_period)
-  #   }
-  # })
+  observeEvent(input$avant, {
+    period_rank <- which(periods() == input$select_period)
+    if (period_rank == 1) {
+      year_rank <- which(years() == input$select_year)
+      if (year_rank == length(years())) {
+        shinyalert::shinyalert("Attention",
+                               paste("Les données ne sont pas préparées
+                                       pour des dates avant l'année scolaire",
+                                     input$select_year, "."),
+                               type = "error", html = TRUE)
+      } else {
+        new_year <- years()[year_rank + 1]
+        updateSelectInput(inputId = "select_period",
+                          choices = periods(),
+                          selected = "Avril-Ete")
+        updateSelectInput(inputId = "select_year",
+                          choices = years(),
+                          selected = new_year)
+      }
+    } else {
+      new_period <- periods()[period_rank - 1]
+      updateSelectInput(inputId = "select_period",
+                        choices = periods(),
+                        selected = new_period)
+    }
+  })
   
   output$select_period <- renderUI({
     selectInput("select_period", "Période inter-vacances",
@@ -1069,7 +1069,7 @@ server <- function(session, input, output) {
     
     # update_mapping_cafet_freq(to_add)
     sync_ssp_cloud("input")
-    shinyalert(title = "Import réussi !",
+    shinyalert::shinyalert(title = "Import réussi !",
                text = paste("Ajout de",
                             nrows_to_add,
                             "effectifs de repas par établissements pour",
@@ -1086,7 +1086,7 @@ server <- function(session, input, output) {
     #                                             "LIBCON","TOTEFFREE", "TOTEFFPREV")) %>%
     #     transform_fusion(check_against = dt()$map_freqs$cantine_nom) %>%
     #     load_fusion(freqs = dt()$freqs)
-    shinyalert(title = "Cette fonction est temporairement désactivée",
+    shinyalert::shinyalert(title = "Cette fonction est temporairement désactivée",
                text = paste("Un correctif doit être apporté pour que cette",
                             "fonctionnalité soit rétablie."),
                type = "error")
@@ -1097,7 +1097,7 @@ server <- function(session, input, output) {
   observeEvent(input$add_effs_real_sal, {
     drivers <- sort(unique(odbc::odbcListDrivers()[[1]]))
     if (sum(stringr::str_detect(drivers, "Firebird"), na.rm = TRUE) < 1) {
-      shinyalert(title = "Besoin d'un accès spécial pour cette option",
+      shinyalert::shinyalert(title = "Besoin d'un accès spécial pour cette option",
                  text = paste("Cette méthode d'import requiert de",
                               "disposer d'un poste disposant des droits",
                               "en lecture et des drivers permettant de",
@@ -1130,7 +1130,7 @@ server <- function(session, input, output) {
   observeEvent(input$add_menus_sal, {
     drivers <- sort(unique(odbc::odbcListDrivers()[[1]]))
     if (sum(stringr::str_detect(drivers, "Firebird"), na.rm = TRUE) < 1) {
-      shinyalert(title = "Besoin d'un accès spécial pour cette option",
+      shinyalert::shinyalert(title = "Besoin d'un accès spécial pour cette option",
                  text = paste("Cette méthode d'import requiert de",
                               "disposer d'un poste disposant des droits",
                               "en lecture et des drivers permettant de",
@@ -1159,7 +1159,7 @@ server <- function(session, input, output) {
       dplyr::bind_rows(dt()$menus, new_menus) %>%
         readr::write_csv(index$path[index$name == "menus"])
       sync_ssp_cloud("input")
-      shinyalert(title = "Import des menus depuis l'open data réussi !",
+      shinyalert::shinyalert(title = "Import des menus depuis l'open data réussi !",
                  text = paste("Ajout des menus de convive pour",
                               nrow(new_menus), 
                               "plats pour",
@@ -1182,7 +1182,7 @@ server <- function(session, input, output) {
     dplyr::bind_rows(menus, new_menus) %>%
       readr::write_csv(index$path[index$name == "menus"])
     sync_ssp_cloud("input")
-    shinyalert(title = "Import des menus depuis l'open data réussi !",
+    shinyalert::shinyalert(title = "Import des menus depuis l'open data réussi !",
                text = paste("Ajout des menus de convive pour",
                             nrow(new_menus), 
                             "plats pour",
@@ -1203,7 +1203,7 @@ server <- function(session, input, output) {
       dplyr::bind_rows(dt_new) %>%
       readr::write_csv(index$path[index$name == "strikes"])
     sync_ssp_cloud("input")
-    shinyalert(title = "Import manuel des gèves réussi !",
+    shinyalert::shinyalert(title = "Import manuel des gèves réussi !",
                text = paste("Ajout des grèves pour ", nrow(dt_new), " jours."),
                type = "success")
   })
@@ -1254,7 +1254,7 @@ server <- function(session, input, output) {
         dplyr::filter(!(paste(ecole, annee_scolaire) %in% paste(hc_new$ecole, hc_new$annee_scolaire))) %>%
         dplyr::bind_rows(hc_new) %>%
         readr::write_csv(index$path[index$name == "effs"])
-      shinyalert(title = "Import manuel des effectifs réussi !",
+      shinyalert::shinyalert(title = "Import manuel des effectifs réussi !",
                  text = paste("Ajout de ",
                               nrow(hc_new), 
                               "effectifs d'écoles."),
@@ -1274,7 +1274,7 @@ server <- function(session, input, output) {
     hc_path <- as.character(index[index$name == "effs", "path"])
     dplyr::bind_rows(old_hc, new_hc) %>%
       readr::write_csv(index$path[index$name == "effs"])
-    shinyalert(title = "Import des effectifs depuis l'open data réussi !",
+    shinyalert::shinyalert(title = "Import des effectifs depuis l'open data réussi !",
                text = paste("Ajout de",
                             nrow(new_hc), 
                             "effectifs d'écoles."),
@@ -1296,11 +1296,11 @@ server <- function(session, input, output) {
     map_check_msg <- paste(c(freqs_notin_mfreqs, cafets_notin_mfreqs, effs_notin_mschools, 
                              cafets_notin_mschools, mschools_notin_cafets), collapse = "\n")
     if (map_check_msg != "") {
-      shinyalert(title = "Tables de correspondances incomplètes",
+      shinyalert::shinyalert(title = "Tables de correspondances incomplètes",
                  text = map_check_msg,
                  type = "warning")
     } else {
-      shinyalert(title = "Les tables de correspondances sont en ordre",
+      shinyalert::shinyalert(title = "Les tables de correspondances sont en ordre",
                  text = "Pas d'incohérences relevées.",
                  type = "success")
     }
@@ -1381,9 +1381,9 @@ server <- function(session, input, output) {
   
   global <- reactive({
     consolidated() %>%
-      dplyr::mutate(`Année` = ifelse(month(date) > 7,
-                                     paste(year(date), year(date)+1, sep = "-"),
-                                     paste(year(date)-1, year(date), sep = "-"))) %>%
+      dplyr::mutate(`Année` = ifelse(lubridate::month(date) > 7,
+                                     paste(lubridate::year(date), lubridate::year(date)+1, sep = "-"),
+                                     paste(lubridate::year(date)-1, lubridate::year(date), sep = "-"))) %>%
       dplyr::group_by(date, `Année`, type) %>%
       dplyr::summarise(`Erreur de prédiction` = sum(`Erreur de prédiction`,
                                                     na.rm = TRUE))
