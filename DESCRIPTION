@@ -30,6 +30,7 @@ Imports:
     reticulate,
     shiny (>= 1.7.1),
     shinyalert,
+    shinyjs,
     stringi,
     stringr,
     tidyr,
