@@ -809,61 +809,61 @@ server <- function(session, input, output) {
   
   # Navigation - bouton "Après" ---------------------------------------------
   
-  observeEvent(input$apres, {
-    period_rank <- which(periods() == input$select_period)
-    if (period_rank == 5) {
-      year_rank <- which(years() == input$select_year)
-      if (year_rank == 1) {
-        shinyalert::shinyalert("Attention",
-                               paste("Les données ne sont pas préparées
-                                       pour des dates après l'année scolaire", 
-                                     input$select_year, "."), 
-                               type = "error", html = TRUE)
-      } else {
-        new_year <- years()[year_rank - 1]
-        updateSelectInput(inputId = "select_period",
-                          choices = periods(),
-                          selected = "Ete-Toussaint")
-        updateSelectInput(inputId = "select_year",
-                          choices = years(),
-                          selected = new_year)
-      }
-    } else {
-      new_period <- periods()[period_rank + 1]
-      updateSelectInput(inputId = "select_period",
-                        choices = periods(),
-                        selected = new_period)
-    }
-  })
+  # observeEvent(input$apres, {
+  #   period_rank <- which(periods() == input$select_period)
+  #   if (period_rank == 5) {
+  #     year_rank <- which(years() == input$select_year)
+  #     if (year_rank == 1) {
+  #       shinyalert::shinyalert("Attention",
+  #                              paste("Les données ne sont pas préparées
+  #                                      pour des dates après l'année scolaire", 
+  #                                    input$select_year, "."), 
+  #                              type = "error", html = TRUE)
+  #     } else {
+  #       new_year <- years()[year_rank - 1]
+  #       updateSelectInput(inputId = "select_period",
+  #                         choices = periods(),
+  #                         selected = "Ete-Toussaint")
+  #       updateSelectInput(inputId = "select_year",
+  #                         choices = years(),
+  #                         selected = new_year)
+  #     }
+  #   } else {
+  #     new_period <- periods()[period_rank + 1]
+  #     updateSelectInput(inputId = "select_period",
+  #                       choices = periods(),
+  #                       selected = new_period)
+  #   }
+  # })
   
   # Navigation - bouton "Avant" ---------------------------------------------
   
-  observeEvent(input$avant, {
-    period_rank <- which(periods() == input$select_period)
-    if (period_rank == 1) {
-      year_rank <- which(years() == input$select_year)
-      if (year_rank == length(years())) {
-        shinyalert::shinyalert("Attention",
-                               paste("Les données ne sont pas préparées
-                                       pour des dates avant l'année scolaire", 
-                                     input$select_year, "."), 
-                               type = "error", html = TRUE)
-      } else {
-        new_year <- years()[year_rank + 1]
-        updateSelectInput(inputId = "select_period",
-                          choices = periods(),
-                          selected = "Avril-Ete")
-        updateSelectInput(inputId = "select_year",
-                          choices = years(),
-                          selected = new_year)
-      }
-    } else {
-      new_period <- periods()[period_rank - 1]
-      updateSelectInput(inputId = "select_period",
-                        choices = periods(),
-                        selected = new_period)
-    }
-  })
+  # observeEvent(input$avant, {
+  #   period_rank <- which(periods() == input$select_period)
+  #   if (period_rank == 1) {
+  #     year_rank <- which(years() == input$select_year)
+  #     if (year_rank == length(years())) {
+  #       shinyalert::shinyalert("Attention",
+  #                              paste("Les données ne sont pas préparées
+  #                                      pour des dates avant l'année scolaire", 
+  #                                    input$select_year, "."), 
+  #                              type = "error", html = TRUE)
+  #     } else {
+  #       new_year <- years()[year_rank + 1]
+  #       updateSelectInput(inputId = "select_period",
+  #                         choices = periods(),
+  #                         selected = "Avril-Ete")
+  #       updateSelectInput(inputId = "select_year",
+  #                         choices = years(),
+  #                         selected = new_year)
+  #     }
+  #   } else {
+  #     new_period <- periods()[period_rank - 1]
+  #     updateSelectInput(inputId = "select_period",
+  #                       choices = periods(),
+  #                       selected = new_period)
+  #   }
+  # })
   
   output$select_period <- renderUI({
     selectInput("select_period", "Période inter-vacances",
