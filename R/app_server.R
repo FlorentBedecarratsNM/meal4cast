@@ -32,7 +32,7 @@ app_server <- function( input, output, session ) {
   mod_model_fetch_xgboost_server("model_fetch_xgboost_ui_1")
   # mod_model_source_xgboost_server("model_source_xgboost_ui_1")
   # prepare_arborescence()
-  mod_sync_s3_output_server("sync_s3_output_ui_1")
+  # mod_sync_s3_output_server("sync_s3_output_ui_1")
   create_folder("temp")
   create_folder("data")
   set_config_variables()
