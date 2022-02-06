@@ -1,9 +1,12 @@
+# R classical exclusions
 .Rproj.user
 .Rhistory
 .Rdata
 .httr-oauth
 .DS_Store
 todo.md
+
+# Data to be handled in S3
 output/
 data/
 
