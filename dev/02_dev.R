@@ -42,17 +42,6 @@ usethis::use_package( "tidyr" )
 usethis::use_package( "waiter" )
 
 
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-usethis::use_package( "bslib" )
-
-
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "admin_list_files" ) # Name of the module

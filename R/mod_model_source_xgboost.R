@@ -20,10 +20,25 @@ mod_model_source_xgboost_ui <- function(id){
 mod_model_source_xgboost_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    # Load python environment
-    # reticulate::use_python("/opt/venv/bin/python3", required = TRUE)
-    reticulate::use_virtualenv("/opt/venv", required = TRUE)
-    # reticulate::use_virtualenv("venv_shiny_app", required = TRUE)
+    # Load python environment depending on context
+    if (stringr::str_starts(Sys.info()[["nodename"]], "meal4cast")) { # Yes if runs over Docker/SSPCloud
+      virtualenv_dir <- "/opt/venv"
+    } else { # otherwise for linux environment for local development
+      virtualenv_dir <- "venv_shiny_app"
+      if (!reticulate::virtualenv_exists(envname = virtualenv_dir)) {
+        reticulate::virtualenv_create(envname = virtualenv_dir)
+        reticulate::virtualenv_install(envname, packages = c("pandas==1.1.0",
+                                                             "numpy==1.19.1",
+                                                             "xgboost==1.1.1",
+                                                             "scikit-learn==0.23.1",
+                                                             "dask[dataframe]==0.19.4",
+                                                             "lunardate==0.2.0",
+                                                             "convertdate==2.2.1",
+                                                             "matplotlib==3.2.1",
+                                                             "python-dateutil==2.8.1"))
+      }
+    }
+    reticulate::use_virtualenv(virtualenv_dir, required = TRUE)
     reticulate::source_python("main.py")
   })
 

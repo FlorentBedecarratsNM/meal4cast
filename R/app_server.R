@@ -14,8 +14,10 @@ app_server <- function( input, output, session ) {
   
   mod_model_fetch_xgboost_server("model_fetch_xgboost_ui_1")
   mod_model_source_xgboost_server("model_source_xgboost_ui_1")
-  # mod_sync_s3_output_server("sync_s3_output_ui_1")
   # prepare_arborescence()
+  if (stringr::str_starts(Sys.info()[["nodename"]], "meal4cast")) { # Docker/SSPCloud
+    mod_sync_s3_output_server("sync_s3_output_ui_1")
+  }
   
   mod_admin_list_files_server("admin_list_files_ui_1")
 
