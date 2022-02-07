@@ -78,6 +78,8 @@ golem::add_fct( "not_in" )
 golem::add_utils( "set_config_variables" )
 golem::add_utils( "gen_opendata_url" )
 golem::add_utils( "create_folder" )
+golem::add_utils( "create_folder" )
+golem::add_utils( "sync_sspcloud" )
 
 golem::add_fct( "fetch_xgb_model" ) 
 

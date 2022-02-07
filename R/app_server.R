@@ -15,10 +15,8 @@ app_server <- function( input, output, session ) {
   mod_model_fetch_xgboost_server("model_fetch_xgboost_ui_1")
   mod_model_source_xgboost_server("model_source_xgboost_ui_1")
   # prepare_arborescence()
-  if (stringr::str_starts(Sys.info()[["nodename"]], "meal4cast")) { # Docker/SSPCloud
-    mod_sync_s3_output_server("sync_s3_output_ui_1")
-  }
-  
+  sync_sspcloud(c("output", "data"))
+
   mod_admin_list_files_server("admin_list_files_ui_1")
 
   # Handle simple vs. advanced interface ------------------------------------
@@ -542,7 +540,7 @@ app_server <- function( input, output, session ) {
         dplyr::filter(!(date %in% dt()$menus$date)) 
       dplyr::bind_rows(dt()$menus, new_menus) %>%
         readr::write_csv(index$path[index$name == "menus"])
-      sync_ssp_cloud("input")
+      sync_sspcloud("input")
       shinyalert::shinyalert(title = "Import des menus depuis l'open data réussi !",
                              text = paste("Ajout des menus de convive pour",
                                           nrow(new_menus), 
