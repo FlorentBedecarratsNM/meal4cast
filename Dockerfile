@@ -37,7 +37,7 @@ RUN Rscript -e 'remotes::install_version("shinyalert",upgrade="never", version =
 RUN Rscript -e 'remotes::install_version("reticulate",upgrade="never", version = "1.20")'
 RUN Rscript -e 'remotes::install_version("readxl",upgrade="never", version = "1.3.1")'
 RUN Rscript -e 'remotes::install_version("readODS",upgrade="never", version = "1.7.0")'
-RUN Rscript -e 'remotes::install_version("plotly",upgrade="never", version = "4.9.4.1")'
+RUN Rscript -e 'remotes::install_version("plotly",upgrade="never", version = "4.9.3")'
 RUN Rscript -e 'remotes::install_version("odbc",upgrade="never", version = "1.3.3")'
 RUN Rscript -e 'remotes::install_version("lubridate",upgrade="never", version = "1.7.10")'
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.3.1")'
