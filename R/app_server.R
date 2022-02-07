@@ -234,7 +234,7 @@ app_server <- function( input, output, session ) {
         new_year <- years()[year_rank + 1]
         updateSelectInput(inputId = "select_period",
                           choices = periods(),
-                          selected = "Avril-Ete")
+                          selected = "Printemps-Ete")
         updateSelectInput(inputId = "select_year",
                           choices = years(),
                           selected = new_year)
