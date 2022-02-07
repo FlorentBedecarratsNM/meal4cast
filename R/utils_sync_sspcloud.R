@@ -8,7 +8,7 @@
 # a function to sync training data or generated previsions to SSPCloud
 sync_sspcloud <- function(folders) {
   # Check if the app is running on SSPCloud
-  if (Sys.info()[['user']] == "rstudio") {
+  if (stringr::str_starts(Sys.info()[['nodename']], "rstudio|meal4cast")) {
     # Then send selected objects to SSP Cloud
     for (i in 1:length(folders)) {
       folder <- folders[i]
