@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Installation des paquets requis pour Python au démarrage du pod SSPCloud
+sudo apt update
+sudo apt install -y python3-venv python3-pip
+
 # Create variables
 PROJ_NAME=meal4cast
 WORK_DIR=/home/rstudio/$PROJ_NAME

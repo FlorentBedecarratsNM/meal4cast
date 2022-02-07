@@ -1,4 +1,5 @@
-install.packages(c("golem", "shinyalert", "reticulate"))
+install.packages(c("golem", "shinyalert", "reticulate", "waiter",
+                   "plotly", "readODS", "shinyjs"))
 
 # Set options here
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
