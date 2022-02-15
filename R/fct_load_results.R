@@ -18,7 +18,7 @@ load_results <- function(folder = "output", pattern = "results_by_cafeteria.*csv
                                                          "xgb_interval|xgb"),
                     file_contents = purrr::map(filename, ~ arrow::read_csv_arrow(.))) %>%
       tidyr::unnest(cols = c(file_contents)) %>%
-      dplyr::arrange(desc(created), desc(training_type)) %>%
+      dplyr::arrange(dplyr::desc(created), dplyr::desc(training_type)) %>%
       dplyr::distinct(date_str, variable, cantine_nom, cantine_type, .keep_all = TRUE)
   } else {
     prev_results <- NA

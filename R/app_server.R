@@ -5,7 +5,8 @@
 #' @import shiny
 #' @noRd
 app_server <- function( input, output, session ) {
-  
+  # To enable upload of large files (Parquet files from Fusion)
+  options(shiny.maxRequestSize=30*1024^2)
   library(lubridate) # explicitly declared here to use '%within%' below
   
   create_folder("temp")
@@ -392,7 +393,7 @@ app_server <- function( input, output, session ) {
                            "Ces données peuvent être importées de plusieurs manières :
                                - en allant récupérer les inormations les plus récentes sur l'open data
                                - en changeant les données brutes extraites d'un sauvegarde de la base de données de Fusion
-                               - en se connectation directement à l'outil Fusion", 
+                               - en se connectation directement à l'outil Fusion (uniquement lorsque l'application fonctionne en local sur un PC configuré pour avoir accès à Fusion)", 
                            type = "info")
   }) 
   observeEvent(input$help_menus, {
@@ -400,7 +401,7 @@ app_server <- function( input, output, session ) {
                            "Ces données peuvent être importées de plusieurs manières :
                                - en allant récupérer les inormations les plus récentes sur l'open data
                                - en changeant les données brutes extraites d'un sauvegarde de la base de données de Fusion
-                               - en se connectation directement à l'outil Fusion", 
+                               - en se connectation directement à l'outil Fusion (uniquement lorsque l'application fonctionne en local sur un PC configuré pour avoir accès à Fusion)", 
                            type = "info")
   })
   observeEvent(input$help_strikes, {
@@ -429,7 +430,7 @@ app_server <- function( input, output, session ) {
                            type = "info")
   }) 
   ### Import attendance OD -------------------------------------------------
-  observeEvent(input$add_effs_real_od, {
+  observeEvent(input$add_effs_opendata, {
     httr::GET(freq_od, # httr_progress(waitress_od),
               httr::write_disk(freq_od_temp_loc, overwrite = TRUE))
     freqs <- dt()$freqs # %>%
@@ -452,22 +453,22 @@ app_server <- function( input, output, session ) {
     # update_mapping_cafet_freq(to_add)
     sync_ssp_cloud("input")
     shinyalert::shinyalert(title = "Import réussi !",
-                           text = paste("Ajout de",
+                           text = paste("Ajout de ",
                                         nrows_to_add,
-                                        "effectifs de repas par établissements pour",
+                                        " effectifs de repas par établissements pour ",
                                         ndays_to_add,
-                                        "jours de service."),
+                                        " jours de service."),
                            type = "success")
   })
   ### Import attendance parquet ---------------------------------------------
   # Manually load datafile
-  observeEvent(input$add_effs_real, {
-    # file_in <- input$add_effs_real
-    # dt_in <- arrow::read_parquet(file_in$datapath,
-    #                              col_select = c("DATPLGPRESAT", "NOMSAT", "LIBPRE",
-    #                                             "LIBCON","TOTEFFREE", "TOTEFFPREV")) %>%
-    #     transform_fusion(check_against = dt()$map_freqs$cantine_nom) %>%
-    #     load_fusion(freqs = dt()$freqs)
+  observeEvent(input$add_effs_parquet, {
+    file_in <- input$add_effs_parquet
+    dt_in <- arrow::read_parquet(file_in$datapath,
+                                 col_select = c("DATPLGPRESAT", "NOMSAT", "LIBPRE",
+                                                "LIBCON","TOTEFFREE", "TOTEFFPREV")) %>%
+        transform_fusion(check_against = dt()$map_freqs$cantine_nom) %>%
+        load_fusion(freqs = dt()$freqs)
     shinyalert::shinyalert(title = "Cette fonction est temporairement désactivée",
                            text = paste("Un correctif doit être apporté pour que cette",
                                         "fonctionnalité soit rétablie."),
@@ -476,7 +477,7 @@ app_server <- function( input, output, session ) {
   
   
   ### Import attendance Firebase ----------------------------------------------
-  observeEvent(input$add_effs_real_sal, {
+  observeEvent(input$add_effs_fusion, {
     drivers <- sort(unique(odbc::odbcListDrivers()[[1]]))
     if (sum(stringr::str_detect(drivers, "Firebird"), na.rm = TRUE) < 1) {
       shinyalert::shinyalert(title = "Besoin d'un accès spécial pour cette option",
@@ -509,7 +510,7 @@ app_server <- function( input, output, session ) {
   })
   
   ### Import menus Firebase ----------------------------------------------
-  observeEvent(input$add_menus_sal, {
+  observeEvent(input$add_menus_fusion, {
     drivers <- sort(unique(odbc::odbcListDrivers()[[1]]))
     if (sum(stringr::str_detect(drivers, "Firebird"), na.rm = TRUE) < 1) {
       shinyalert::shinyalert(title = "Besoin d'un accès spécial pour cette option",
@@ -535,7 +536,7 @@ app_server <- function( input, output, session ) {
         dplyr::select(date = "DATPLGPRE", rang = "ORDRE_LIBCATFIT", 
                       plat = "LIBCLIFIT") %>%
         unique() %>%
-        # arrange(date, rang) %>% # nicer to inspect the table this way
+        dplyr::arrange(dplyr::desc(date), rang) %>% # nicer to inspect the table this way
         dplyr::mutate(date = format(date, "%d/%m/%Y")) %>%
         dplyr::filter(!(date %in% dt()$menus$date)) 
       dplyr::bind_rows(dt()$menus, new_menus) %>%
@@ -552,8 +553,33 @@ app_server <- function( input, output, session ) {
     
   })
   
+  ### Import menus parquet ---------------------------------------
+  observeEvent(input$add_menus_parquet, {
+    file_in <- input$add_menus_parquet
+    new_menus  <- arrow::read_parquet(file_in$datapath) %>%
+      # new_menus <- arrow::read_parquet("menus.parquet") %>%
+      dplyr::filter(LIBPRE == "DEJEUNER" & LIBCATFIT != "PAIN") %>%
+      dplyr::select(date = "DATPLGPRE", rang = "ORDRE_LIBCATFIT", 
+                    plat = "LIBCLIFIT") %>%
+      unique() %>%
+      dplyr::arrange(dplyr::desc(date), rang) %>% # nicer to inspect the table this way
+      dplyr::mutate(date = format(date, "%d/%m/%Y")) %>%
+      dplyr::filter(!(date %in% dt()$menus$date))
+    dplyr::bind_rows(dt()$menus, new_menus) %>%
+      readr::write_csv(index$path[index$name == "menus"])
+    sync_ssp_cloud("input")
+    shinyalert::shinyalert(title = "Import réussi des menus depuis le fichier !",
+               text = paste("Ajout des menus de convive pour",
+                            nrow(new_menus), 
+                            "plats pour",
+                            length(unique(new_menus$date)), 
+                            "jours de service."),
+               type = "success")
+    
+  })
+  
   ### Import menus OD -------------------------------------------------
-  observeEvent(input$add_menus_od, {
+  observeEvent(input$add_menus_opendata, {
     httr::GET(menus_od, # httr_progress(waitress_od),
               httr::write_disk(menus_od_temp_loc, overwrite = TRUE))
     new_menus <- arrow::read_delim_arrow(menus_od_temp_loc, delim = ";") %>%
@@ -607,8 +633,24 @@ app_server <- function( input, output, session ) {
     new_vacs %>%
       dplyr::bind_rows(old_vacs) %>%
       readr::write_csv(index$path[index$name == "vacs"])
+    
+    # Updating annees_scolaires.csv
+    gen_piv(dt()$vacs) %>%
+      dplyr::filter(stringr::str_detect(periode, "Ete")) %>%
+      tidyr::pivot_longer(cols = c(-annee, -periode), names_to = "borne", values_to = "date") %>%
+      dplyr::filter((periode == "Ete-Toussaint" & borne == "Début") | 
+                      (periode == "Printemps-Ete" & borne == "Fin")) %>%
+      dplyr::select(-periode) %>%
+      tidyr::pivot_wider(id_cols = "annee", names_from = "borne", values_from = "date") %>%
+      dplyr::select(annee_scolaire = annee, date_debut = `Début`, date_fin = Fin) %>%
+      dplyr::mutate(date_debut = date_debut + 1, date_fin = date_fin - 1) %>%
+      dplyr::anti_join(dt()$schoolyears, by = "annee_scolaire") %>%
+      dplyr::arrange(dplyr::desc(date_debut)) %>%
+      dplyr::bind_rows(dt()$schoolyears) %>%
+      readr::write_csv(index$path[index$name == "schoolyears"])
+    
     sync_ssp_cloud("input")
-    shinyalert(title = "Import des vacances depuis l'open data de l'éducation nationale réussi !",
+    shinyalert::shinyalert(title = "Import des vacances depuis l'open data de l'éducation nationale réussi !",
                text = paste("Ajout des vacances scolaires pour la Zone B, pour",
                             nrow(new_vacs), 
                             "périodes de vacances."),
@@ -622,7 +664,7 @@ app_server <- function( input, output, session ) {
   observeEvent(input$add_headcounts, {
     file_in <- input$add_headcounts
     if (stringr::str_starts(input$schoolyear_hc, "[0-9]", negate = TRUE)) {
-      shinyalert("Sélectionner une année", 
+      shinyalert::shinyalert("Sélectionner une année", 
                  "Veuillez sélectionner l'année scolaire correspondante au fichier importé et relancer l'import.",
                  type = "error")
     } else {
