@@ -5,6 +5,11 @@
 VIRTUALENV_NAME = 'venv_shiny_app'
 py_ver <- "3.8"
 
+
+# Set locales in French (for graph dates)
+Sys.setenv(LANG = "fr_FR.UTF-8")
+Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
+
 # ------------------------- Settings (Do not edit) -------------------------- #
 
 if (Sys.info()[['user']] == 'shiny'){
