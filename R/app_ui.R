@@ -177,10 +177,12 @@ app_ui <- function(request) {
                       hr(),
                       DT::dataTableOutput('sysinfo'),
                       br(),
+                      verbatimTextOutput('which_locale'),
                       verbatimTextOutput('which_python'),
                       verbatimTextOutput('python_version'),
                       verbatimTextOutput('ret_env_var'),
-                      verbatimTextOutput('venv_root')),
+                      verbatimTextOutput('venv_root'),
+                      mod_admin_list_files_ui("admin_list_files_ui_1")),
              bslib::nav_item(actionButton("set_simple", "Simple"),
                              actionButton("set_advanced", "Avancé"))
   )
@@ -209,5 +211,8 @@ golem_add_external_resources <- function(){
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
   )
+  
+  # A module to list files in shiny environment
+  mod_admin_list_files_server("admin_list_files_ui_1")
 }
 

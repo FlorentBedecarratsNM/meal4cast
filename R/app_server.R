@@ -840,6 +840,11 @@ app_server <- function( input, output, session ) {
     return(DT::datatable(df, rownames = F, selection = 'none',
                          style = 'bootstrap', filter = 'none', options = list(dom = 't')))
   })
+  # Display system language
+  output$which_locale <- renderText({
+    paste0("Paramètres de langue de l'environnement R : ", 
+           Sys.getlocale(category = "LC_ALL"))
+  })
   # Display system path to python
   output$which_python <- renderText({
     paste0("Emplacement de Python : ", Sys.which('python'))

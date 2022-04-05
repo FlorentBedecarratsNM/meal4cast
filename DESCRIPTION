@@ -22,6 +22,7 @@ Imports:
     lubridate,
     magrittr,
     odbc,
+    pkgload,
     plotly,
     purrr,
     readODS,
