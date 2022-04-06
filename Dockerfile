@@ -58,6 +58,6 @@ RUN mv school_meal_forecast_xgboost-dev/tests/ .
 RUN mv school_meal_forecast_xgboost-dev/main.py .
 RUN rm -rf school_meal_forecast_xgboost-dev
 RUN rm dev.zip
-ADD https://raw.githubusercontent.com/FlorentBedecarratsNM/meal4cast/master/.Rprofile ./
+ADD https://raw.githubusercontent.com/FlorentBedecarratsNM/meal4cast/master/.Rprofile /usr/local/lib/R/etc
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');meal4cast::run_app()"
