@@ -23,7 +23,7 @@ Imports:
     magrittr,
     odbc,
     pkgload,
-    plotly,
+    plotly (== 4.9.3),
     purrr,
     readODS,
     readr,
