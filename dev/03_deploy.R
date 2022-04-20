@@ -70,6 +70,8 @@ insert_lines(before = "RUN echo",
                         "RUN pip install matplotlib==3.2.1",
                         "RUN pip install python-dateutil==2.8.1"))
 
+# "plotly",upgrade="never", version = "4.10.0"
+# "plotly",upgrade="never", version = "4.9.3"
 ## If you want to deploy to ShinyProxy
 golem::add_dockerfile_shinyproxy()
 
